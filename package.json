@@ -1,0 +1,28 @@
+{
+  "name": "environmentjs",
+  "version": "0.0.1",
+  "description": "Frontend overlay for environment effects",
+  "main": "gulp serve",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tdt17/environmentjs.git"
+  },
+  "keywords": [
+    "frontend",
+    "fun",
+    "effects"
+  ],
+  "author": "Torsten Hain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tdt17/environmentjs/issues"
+  },
+  "homepage": "https://github.com/tdt17/environmentjs#readme",
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "gulp": "^3.9.0"
+  }
+}
