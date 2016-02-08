@@ -76,7 +76,7 @@ function ParticleService() {
 function GroundService() {
     this.fillStyle = '';
     this.xWind = 0;
-    this.vxWind = 0.1;
+    this.vxWind = 0.01;
 
     this.draw = function() {
         ctx.globalCompositeOperation = 'source-over';
@@ -98,9 +98,10 @@ function GroundService() {
 
             case StateEnum.GRASS:
                 ctx.strokeStyle = 'rgba(0, 210, 0, 0.9)';
+                var wind = Math.sin(this.xWind) * 10;
                 i = 0;
                 while( i < groundCol) {
-                    ground[ i++ ].drawPlant(this.xWind);
+                    ground[ i++ ].drawPlant(wind);
                 }
                 break;
         }
@@ -114,9 +115,8 @@ function GroundService() {
 
         if(groundState == StateEnum.GRASS) {
             this.xWind += this.vxWind;
-            this.vxWind += 0.05;
-            if(this.xWind > 8 || this.xWind < -8){
-                this.vxWind = -this.vxWind;
+            if(this.xWind > 2*Math.PI){
+                this.xWind = 0;
             }
             return;
         }
@@ -210,6 +210,9 @@ Ground.prototype.reset = function(i){
     this.i = i;
     this.x = ~~(i * (w / groundCol));
     this.y = h;
+    this.grasX1rand = rand(-10,10);
+    this.grasX2rand = rand(-10,10);
+    this.grasYrand = rand(0,10);
 };
 
 Ground.prototype.init = function(){
@@ -244,9 +247,9 @@ Ground.prototype.grow = function() {
 Ground.prototype.drawPlant = function(x) {
     ctx.beginPath();
     ctx.moveTo(this.x, h);
-    ctx.bezierCurveTo(this.x, h, this.x, this.y + (h-this.y)*2/3, this.x + x * ((h-this.y)/10), this.y);
-    //ctx.moveTo(this.x + groundColWHalf, h+1);
-    //ctx.lineTo(this.x + groundColWHalf + x, this.y);
+    ctx.bezierCurveTo(this.x, h, this.x, this.y + (h-this.y)*2/3, this.x + this.grasX1rand + x*((h-this.y)/50), this.y);
+    ctx.moveTo(this.x + groundColWHalf, h+1);
+    ctx.bezierCurveTo(this.x + groundColWHalf, h, this.x + groundColWHalf, this.y + (h-this.y)*2/3, this.x + groundColWHalf + this.grasX2rand + x*((h-this.y)/50), this.y + this.grasYrand);
     ctx.stroke();
 };
 
