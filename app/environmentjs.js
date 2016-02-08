@@ -183,6 +183,13 @@ function init() {
     }
     ground[groundCol - 1].next = ground[0];
 
+    c.style.position = 'fixed';
+    c.style.top = '0';
+    c.style.left = '0';
+    c.style.width = '100%';
+    c.style.height = '100%';
+    c.style.zIndex = '1000';
+    c.style.pointerEvents = 'none';
     document.body.appendChild( c );
     loop();
 }
