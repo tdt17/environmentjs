@@ -6,7 +6,7 @@ var c = document.createElement( 'canvas' ),
     ctx = c.getContext( '2d' ),
     w = c.width = window.innerWidth,
     h = c.height = window.innerHeight,
-    StateEnum = {SNOW: 1, WATER: 2, GRASS: 3},
+    StateEnum = {OFF: 0, SNOW: 1, WATER: 2, GRASS: 3},
     particles = [],
     particleCount = ~~(w / 8),
     particlePath = 2,
@@ -44,8 +44,10 @@ function ParticleService() {
     };
 
     this.step = function() {
-        if( particles.length < particleCount && Math.random() < particleSpawn ) {
+        if( particles.length < particleCount && Math.random() < particleSpawn && particleState != StateEnum.OFF) {
             particles.push( new Particle() );
+        } else if( particles.length > particleCount ) {
+            particles.pop();
         }
 
         var i = particles.length;
@@ -56,6 +58,8 @@ function ParticleService() {
 
     this.setParticleState = function(state) {
         switch(state){
+            case StateEnum.OFF:
+                break;
             case StateEnum.SNOW:
                 ctx.lineWidth = 6;
                 this.strokeStyle = 'rgba(255 ,255 ,255 , 0.8)';
@@ -128,6 +132,10 @@ function GroundService() {
 
     this.setGroundState = function(state) {
         switch(state){
+            case StateEnum.OFF:
+                ground.forEach(function(ground) { ground.y = h; });
+                groundGrowSpeed = 0;
+                break;
             case StateEnum.SNOW:
                 this.fillStyle = 'rgba(210, 210, 210, 0.9)';
                 break;
@@ -188,7 +196,11 @@ Particle.prototype.step = function() {
     var groundI = ground[ i >= groundCol ? 0 : i ];
     if( this.y > groundI.y + 1 ) {
         groundI.grow();
-        this.reset();
+        if(particleState != StateEnum.OFF) {
+            this.reset();
+        }else{
+            particles.splice(particles.indexOf(this),1);
+        }
     }
 };
 

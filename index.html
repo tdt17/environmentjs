@@ -29,18 +29,24 @@
         <tr>
             <td>Particles</td>
             <td>
-                <button onclick="">Off</button>
-                <button onclick="">Snow</button>
-                <button onclick="">Rain</button>
+                <button onclick="particleService.setParticleState(StateEnum.OFF)">Off</button>
+                <button onclick="particleService.setParticleState(StateEnum.SNOW)">Snow</button>
+                <button onclick="particleService.setParticleState(StateEnum.WATER)">Rain</button>
+            </td>
+        </tr>
+        <tr>
+            <td>ParticleCount</td>
+            <td>
+                <input type="range" min="0" max="2000" onchange="particleCount = this.value"/>
             </td>
         </tr>
         <tr>
             <td>Ground</td>
             <td>
-                <button onclick="">Off</button>
-                <button onclick="">Snow</button>
-                <button onclick="">Water</button>
-                <button onclick="">Grass</button>
+                <button onclick="groundService.setGroundState(StateEnum.OFF)">Off</button>
+                <button onclick="groundService.setGroundState(StateEnum.SNOW)">Snow</button>
+                <button onclick="groundService.setGroundState(StateEnum.WATER)">Water</button>
+                <button onclick="groundService.setGroundState(StateEnum.GRASS)">Grass</button>
             </td>
         </tr>
     </table>
