@@ -222,23 +222,17 @@ Ground.prototype.step = function() {
         if(this.left.y > this.y + groundStrength){
             this.left.y -= groundBalanceSpeed;
             this.y += groundBalanceSpeed;
-            return
-        }
-        if(this.right.y > this.y + groundStrength){
+        }else if(this.right.y > this.y + groundStrength){
             this.right.y -= groundBalanceSpeed;
             this.y += groundBalanceSpeed;
-            return
         }
     }else{
         if(this.right.y > this.y + groundStrength){
             this.right.y -= groundBalanceSpeed;
             this.y += groundBalanceSpeed;
-            return
-        }
-        if(this.left.y > this.y + groundStrength){
+        }else if(this.left.y > this.y + groundStrength){
             this.left.y -= groundBalanceSpeed;
             this.y += groundBalanceSpeed;
-            return
         }
     }
 };
