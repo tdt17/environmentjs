@@ -11,6 +11,8 @@ var c = document.createElement( 'canvas' ),
     particleCount = ~~(w / 8),
     particlePath = 2,
     particleSpawn = 0.3,
+    particleWidth = 2,
+    particleGravity = 0.01,
     particleState = StateEnum.WATER,
     particleService,
     groundCol = ~~(w / 20),
@@ -24,11 +26,38 @@ var c = document.createElement( 'canvas' ),
     groundMax = h * 2 / 3,
     groundService,
 
-    gravity = 0.01,
     lineCap = 'round';
 
 function rand( min, max ) {
     return Math.random() * ( max - min ) + min;
+}
+
+function updateGroundParticleInteraction() {
+    switch(groundState) {
+        case StateEnum.SNOW:
+            switch (particleState) {
+                case StateEnum.WATER:
+                    groundGrowSpeed = -1;
+                    break;
+                case StateEnum.SNOW:
+                    groundGrowSpeed = 3;
+                    break;
+            }
+            break;
+        case StateEnum.WATER:
+            groundGrowSpeed = 2;
+            break;
+        case StateEnum.GRASS:
+            switch (particleState) {
+                case StateEnum.WATER:
+                    groundGrowSpeed = 2;
+                    break;
+                case StateEnum.SNOW:
+                    groundGrowSpeed = -2;
+                    break;
+            }
+            break;
+    }
 }
 
 
@@ -36,6 +65,7 @@ function ParticleService() {
     this.strokeStyle = '';
 
     this.draw = function() {
+        ctx.lineWidth = particleWidth;
         ctx.strokeStyle = this.strokeStyle;
         var i = particles.length;
         while( i-- ) {
@@ -61,17 +91,20 @@ function ParticleService() {
             case StateEnum.OFF:
                 break;
             case StateEnum.SNOW:
-                ctx.lineWidth = 6;
+                particlePath = 2;
+                particleGravity = 0.01;
+                particleWidth = 6;
                 this.strokeStyle = 'rgba(255 ,255 ,255 , 0.8)';
                 break;
             case StateEnum.WATER:
                 particlePath = 3;
-                gravity = 0.05;
-                ctx.lineWidth = 2;
+                particleGravity = 0.05;
+                particleWidth = 2;
                 this.strokeStyle = 'rgba(80 ,80 ,200 , 0.6)';
                 break;
         }
         particleState = state;
+        updateGroundParticleInteraction();
     };
 
     this.setParticleState(particleState);
@@ -101,6 +134,8 @@ function GroundService() {
                 break;
 
             case StateEnum.GRASS:
+
+                ctx.lineWidth = 5;
                 ctx.strokeStyle = 'rgba(0, 210, 0, 0.9)';
                 var wind = Math.sin(this.xWind) * 10;
                 i = 0;
@@ -137,13 +172,25 @@ function GroundService() {
                 groundGrowSpeed = 0;
                 break;
             case StateEnum.SNOW:
+                groundStrength = 8;
+                groundBalanceSpeed = 1;
+                groundMax = h * 2 / 3;
                 this.fillStyle = 'rgba(210, 210, 210, 0.9)';
                 break;
             case StateEnum.WATER:
+                groundStrength = 0.2;
+                groundBalanceSpeed = 0.1;
+                groundMax = h * 2 / 3;
                 this.fillStyle = 'rgba(80 ,80 ,200 , 0.6)';
+                break;
+            case StateEnum.GRASS:
+                groundStrength = 1000;
+                groundBalanceSpeed = 0.1;
+                groundMax = h * 2 / 3;
                 break;
         }
         groundState = state;
+        updateGroundParticleInteraction();
     };
 
     //init
@@ -178,7 +225,7 @@ Particle.prototype.step = function() {
         this.path.pop();
     }
 
-    this.vy += gravity;
+    this.vy += particleGravity;
 
     this.x += this.vx;
     this.y += this.vy;
