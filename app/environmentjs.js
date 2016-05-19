@@ -62,7 +62,6 @@ function updateGroundParticleInteraction() {
 }
 
 function EffectService() {
-
     this.effects = [];
 
     this.startTractor = function() {
@@ -116,6 +115,7 @@ function TractorEffect(img) {
 }
 
 function ParticleService() {
+    this.availableStates = [StateEnum.OFF, StateEnum.SNOW, StateEnum.WATER];
     this.strokeStyle = '';
 
     this.draw = function() {
@@ -156,15 +156,26 @@ function ParticleService() {
                 particleWidth = 2;
                 this.strokeStyle = 'rgba(80 ,80 ,200 , 0.6)';
                 break;
+            default:
+                return;
         }
         particleState = state;
         updateGroundParticleInteraction();
+    };
+
+    this.setRandomParticleState = function(states) {
+      if(states && states.length > 0) {
+          this.setParticleState(states[Math.floor(Math.random()*states.length)]);
+      } else {
+          this.setParticleState(this.availableStates[Math.floor(Math.random()*this.availableStates.length)]);
+      }
     };
 
     this.setParticleState(particleState);
 }
 
 function GroundService() {
+    this.availableStates = [StateEnum.OFF, StateEnum.SNOW, StateEnum.WATER, StateEnum.GRASS];
     this.fillStyle = '';
     this.xWind = 0;
     this.vxWind = 0.01;
@@ -249,9 +260,19 @@ function GroundService() {
                 groundBalanceSpeed = 0.1;
                 groundMax = h * 2 / 3;
                 break;
+            default:
+                return;
         }
         groundState = state;
         updateGroundParticleInteraction();
+    };
+
+    this.setRandomGroundState = function(states) {
+        if(states && states.length > 0) {
+            this.setGroundState(states[Math.floor(Math.random()*states.length)]);
+        } else {
+            this.setGroundState(this.availableStates[Math.floor(Math.random()*this.availableStates.length)]);
+        }
     };
 
     //init
